@@ -3,6 +3,8 @@ import 'package:pokedex/models/pokemon_about_detail_model.dart';
 import 'package:pokedex/models/pokemon_about_location_model.dart';
 import 'package:pokedex/models/pokemon_about_model.dart';
 import 'package:pokedex/models/pokemon_about_species_model.dart';
+import 'package:pokedex/models/pokemon_evolutions_detail_model.dart';
+import 'package:pokedex/models/pokemon_evolutions_model.dart';
 import 'package:pokedex/models/pokemon_list_model.dart';
 import 'package:pokedex/models/pokemon_stats_detail_model.dart';
 import 'package:pokedex/models/pokemon_stats_model.dart';
@@ -61,5 +63,16 @@ class ApiProvider {
     } catch (e) {}
 
     return pokeStats;
+  }
+
+  Future<PokemonEvolutionModel> obtenerInfoEvoPokemon(String nombrePoke) async {
+    var pokeEvolution = PokemonEvolutionModel();
+    try {
+      Response respA = await dio.get(
+          'https://pokeapi.co/api/v2/evolution-chain/${pokeEvolution.pokeDetail.id}');
+      final pokeDetail = PokeEvolutionDetail.fromJson(respA.data);
+      pokeEvolution = PokemonEvolutionModel(pokeDetail: pokeDetail);
+    } catch (e) {}
+    return pokeEvolution;
   }
 }

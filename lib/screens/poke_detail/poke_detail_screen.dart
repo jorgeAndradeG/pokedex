@@ -131,7 +131,9 @@ class _PokemonDetailScreenState extends State<PokemonDetailScreen>
                           PokemonStats(
                             nombrePokemon: widget.pokemon.name.toLowerCase(),
                           ),
-                          PokemonEvolutions(),
+                          PokemonEvolutions(
+                            nombrePokemon: widget.pokemon.name.toLowerCase(),
+                          ),
                           PokemonMoves(),
                         ],
                       ),
