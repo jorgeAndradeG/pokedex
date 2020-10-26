@@ -71,7 +71,6 @@ class PokemonEvolutions extends StatelessWidget {
         ),
       );
     } else {
-      print(pokeChain.chain.evolvesTo[0].species.name);
       return Container(
         padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
         child: Container(
@@ -307,74 +306,4 @@ class PokemonEvolutions extends StatelessWidget {
       );
     }
   }
-
-  /* Widget _segundaRow(BuildContext context, List<EvolvesTo> chain) {
-    if (pokeChain.chain.evolvesTo.isEmpty) {
-      return Container(
-        padding: EdgeInsets.symmetric(vertical: 15, horizontal: 30),
-        child: Text(
-          'No posee cadena evolutiva',
-          style: TextStyle(
-              fontSize: 20,
-              color: Colors.deepOrange,
-              fontWeight: FontWeight.w700),
-        ),
-      );
-    } else {
-      return Container(
-        child: Row(children: [
-          Column(
-            children: [
-              Stack(
-                children: [
-                  Positioned(
-                      child: Image.asset(
-                    'assets/images/pokeball.png',
-                    height: getDimention(context, 100),
-                    color: Colors.black12,
-                  )),
-                ],
-              )
-            ],
-          ),
-          SizedBox(
-            width: 60,
-          ),
-          Column(
-            children: [
-              Icon(Icons.keyboard_arrow_right),
-              SizedBox(
-                height: 7,
-              ),
-              Text(
-                '${chain[0].evolvesTo[0].evolutionDetails[0].minLevel}' ==
-                        "null"
-                    ? 'Sin\nNivel'
-                    : 'Lvl. ${chain[0].evolvesTo[0].evolutionDetails[0].minLevel}',
-
-                //'Lvl ${chain.evolvesTo[0].evolutionDetails[0].minLevel}'
-              ),
-            ],
-          ),
-          SizedBox(
-            width: 50,
-          ),
-          Column(
-            children: [
-              Stack(
-                children: [
-                  Positioned(
-                      child: Image.asset(
-                    'assets/images/pokeball.png',
-                    height: getDimention(context, 100),
-                    color: Colors.black12,
-                  )),
-                ],
-              )
-            ],
-          ),
-        ]),
-      );
-    }
-  }*/
 }

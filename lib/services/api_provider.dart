@@ -9,6 +9,7 @@ import 'package:pokedex/models/pokemon_evolutions_foto_model.dart';
 import 'package:pokedex/models/pokemon_evolutions_model.dart';
 import 'package:pokedex/models/pokemon_evolutions_species_model.dart';
 import 'package:pokedex/models/pokemon_list_model.dart';
+import 'package:pokedex/models/pokemon_moves_detail_model.dart';
 import 'package:pokedex/models/pokemon_stats_detail_model.dart';
 import 'package:pokedex/models/pokemon_stats_model.dart';
 import 'package:pokedex/models/pokemon_stats_species_model.dart';
@@ -107,5 +108,15 @@ class ApiProvider {
       }
     } catch (e) {}
     return pokeFoto;
+  }
+
+  Future<PokeMovesDetail> obtenerMovesPokemon(String nombrePoke) async {
+    var pokeMovesDetail = PokeMovesDetail();
+    try {
+      Response resp =
+          await dio.get('https://pokeapi.co/api/v2/pokemon/$nombrePoke');
+      pokeMovesDetail = PokeMovesDetail.fromJson(resp.data);
+    } catch (e) {}
+    return pokeMovesDetail;
   }
 }
