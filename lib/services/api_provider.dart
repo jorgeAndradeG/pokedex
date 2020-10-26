@@ -3,8 +3,11 @@ import 'package:pokedex/models/pokemon_about_detail_model.dart';
 import 'package:pokedex/models/pokemon_about_location_model.dart';
 import 'package:pokedex/models/pokemon_about_model.dart';
 import 'package:pokedex/models/pokemon_about_species_model.dart';
+import 'package:pokedex/models/pokemon_evolutions_chain_model.dart';
 import 'package:pokedex/models/pokemon_evolutions_detail_model.dart';
+import 'package:pokedex/models/pokemon_evolutions_foto_model.dart';
 import 'package:pokedex/models/pokemon_evolutions_model.dart';
+import 'package:pokedex/models/pokemon_evolutions_species_model.dart';
 import 'package:pokedex/models/pokemon_list_model.dart';
 import 'package:pokedex/models/pokemon_stats_detail_model.dart';
 import 'package:pokedex/models/pokemon_stats_model.dart';
@@ -37,7 +40,6 @@ class ApiProvider {
       Response respC = await dio
           .get('https://pokeapi.co/api/v2/pokemon-species/${pokeDetail.id}');
       final pokeSpecies = PokeAboutSpecies.fromJson(respC.data);
-
       pokeAbout = PokemonAboutModel(
         pokeDetail: pokeDetail,
         pokeLocations: pokeListLocation.items,
@@ -68,11 +70,42 @@ class ApiProvider {
   Future<PokemonEvolutionModel> obtenerInfoEvoPokemon(String nombrePoke) async {
     var pokeEvolution = PokemonEvolutionModel();
     try {
-      Response respA = await dio.get(
-          'https://pokeapi.co/api/v2/evolution-chain/${pokeEvolution.pokeDetail.id}');
+      Response respA =
+          await dio.get('https://pokeapi.co/api/v2/pokemon/$nombrePoke');
       final pokeDetail = PokeEvolutionDetail.fromJson(respA.data);
-      pokeEvolution = PokemonEvolutionModel(pokeDetail: pokeDetail);
+      Response respB = await dio
+          .get('https://pokeapi.co/api/v2/pokemon-species/${pokeDetail.id}');
+      final pokeEvolutionSpecies = PokeEvolutionSpecies.fromJson(respB.data);
+      Response respC =
+          await dio.get('${pokeEvolutionSpecies.evolutionChain.url}');
+      final pokeEvolutionChain = PokeEvolutionChain.fromJson(respC.data);
+
+      pokeEvolution = PokemonEvolutionModel(
+        pokeDetail: pokeDetail,
+        pokeEvolutionSpecies: pokeEvolutionSpecies,
+        pokeEvolutionChain: pokeEvolutionChain,
+      );
     } catch (e) {}
     return pokeEvolution;
+  }
+
+  Future<String> obtenerFotoEvoPokemon(String nombrePoke) async {
+    String pokeFoto;
+    // final pokeFoto = PokeEvolutionFotoModel.fromJson(respA.data[idPoke - 1]);
+    // pokeEvolutionFoto = pokeFoto;
+    List<PokemonListModel> lista = [];
+    try {
+      Response resp =
+          await dio.get('https://pokedexvuejs.herokuapp.com/pokedexdb');
+      final pokemones = PokemonListResponse.fromJsonList(resp.data);
+      lista = pokemones.items;
+      for (var i = 0; i < lista.length; i++) {
+        if (lista[i].name.toLowerCase() == nombrePoke) {
+          pokeFoto = lista[i].image;
+          i = lista.length;
+        }
+      }
+    } catch (e) {}
+    return pokeFoto;
   }
 }
