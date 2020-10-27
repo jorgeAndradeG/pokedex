@@ -61,15 +61,52 @@ class PokemonEvolutions extends StatelessWidget {
   Widget _crearRow(BuildContext context, PokeEvolutionChain pokeChain, int id) {
     if (pokeChain.chain.evolvesTo.isEmpty) {
       return Container(
-        padding: EdgeInsets.symmetric(vertical: 15, horizontal: 30),
-        child: Text(
-          'No posee cadena evolutiva',
-          style: TextStyle(
-              fontSize: 20,
-              color: Colors.deepOrange,
-              fontWeight: FontWeight.w700),
-        ),
-      );
+          padding: EdgeInsets.symmetric(vertical: 15, horizontal: 100),
+          child: Column(children: [
+            Row(children: [
+              Column(
+                children: [
+                  FutureBuilder<String>(
+                      future: apiProvider
+                          .obtenerFotoEvoPokemon(pokeChain.chain.species.name),
+                      builder: (BuildContext context,
+                          AsyncSnapshot<String> snapshot) {
+                        if (snapshot.hasData) {
+                          return Container(
+                              child: Column(children: [
+                            Row(children: [
+                              Column(
+                                children: [
+                                  Stack(
+                                    children: [
+                                      Positioned(
+                                          child: Image.asset(
+                                        'assets/images/pokeball.png',
+                                        height: getDimention(context, 100),
+                                        color: Colors.black12,
+                                      )),
+                                      Positioned(
+                                          child: Image.network(
+                                        snapshot.data,
+                                        height: getDimention(context, 100),
+                                      )),
+                                    ],
+                                  ),
+                                  Text(pokeChain.chain.species.name),
+                                ],
+                              )
+                            ])
+                          ]));
+                        } else {
+                          return Column(
+                            children: [CircularProgressIndicator()],
+                          );
+                        }
+                      }),
+                ],
+              ),
+            ])
+          ]));
     } else {
       return Container(
         padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
@@ -105,7 +142,8 @@ class PokemonEvolutions extends StatelessWidget {
                                             height: getDimention(context, 100),
                                           )),
                                         ],
-                                      )
+                                      ),
+                                      Text(pokeChain.chain.species.name),
                                     ],
                                   )
                                 ])
@@ -167,7 +205,9 @@ class PokemonEvolutions extends StatelessWidget {
                                             height: getDimention(context, 100),
                                           )),
                                         ],
-                                      )
+                                      ),
+                                      Text(pokeChain
+                                          .chain.evolvesTo[0].species.name),
                                     ],
                                   )
                                 ])
@@ -226,7 +266,8 @@ class PokemonEvolutions extends StatelessWidget {
                                       height: getDimention(context, 100),
                                     )),
                                   ],
-                                )
+                                ),
+                                Text(name),
                               ],
                             )
                           ])
@@ -288,7 +329,8 @@ class PokemonEvolutions extends StatelessWidget {
                                       height: getDimention(context, 100),
                                     )),
                                   ],
-                                )
+                                ),
+                                Text(evolvesTo[0].evolvesTo[0].species.name),
                               ],
                             )
                           ])
