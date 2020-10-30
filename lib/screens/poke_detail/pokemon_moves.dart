@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pokedex/helpers/colorTheme.dart';
 import 'package:pokedex/models/pokemon_moves_detail_model.dart';
+import 'package:pokedex/models/pokemon_moves_type_model.dart';
 import 'package:pokedex/services/api_provider.dart';
 
 class PokemonMoves extends StatelessWidget {
@@ -16,8 +17,11 @@ class PokemonMoves extends StatelessWidget {
         if (snapshot.hasData) {
           return Container(
               padding: EdgeInsets.symmetric(vertical: 5, horizontal: 35),
-              child: _listaChips(context, snapshot.data.moves,
-                  snapshot.data.types[0].type.name));
+              child: _listaChips(
+                context,
+                snapshot.data.moves,
+                snapshot.data.types[0].type.name,
+              ));
         } else {
           return Column(
             children: [CircularProgressIndicator()],
@@ -30,15 +34,23 @@ class PokemonMoves extends StatelessWidget {
   Widget _listaChips(BuildContext context, List<Moves> moves, String tipoPoke) {
     List<Widget> listaMovimientos = moves
         .map((move) => Container(
-              child: Chip(
-                label:
-                    Text(move.move.name, style: TextStyle(color: Colors.white)),
-                backgroundColor: setSecondaryColor(tipoPoke),
-                padding: EdgeInsets.symmetric(vertical: 1, horizontal: 5),
-                elevation: 3.5,
-                shadowColor: setSecondaryColor(tipoPoke),
-              ),
-            ))
+            child: FutureBuilder<PokeMovesType>(
+                future: apiProvider.obtenerTipoMovimiento(move.move.url),
+                builder: (context, AsyncSnapshot<PokeMovesType> snapshot2) {
+                  if (snapshot2.hasData) {
+                    return (Chip(
+                      label: Text(move.move.name,
+                          style: TextStyle(color: Colors.white)),
+                      backgroundColor:
+                          setSecondaryColor(snapshot2.data.type.name),
+                      padding: EdgeInsets.symmetric(vertical: 1, horizontal: 5),
+                      elevation: 3.5,
+                      shadowColor: setSecondaryColor(snapshot2.data.type.name),
+                    ));
+                  } else {
+                    return Text('');
+                  }
+                })))
         .toList();
 
     return ListView(
