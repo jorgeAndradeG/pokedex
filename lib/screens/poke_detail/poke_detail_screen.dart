@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:pokedex/helpers/colorTheme.dart';
 import 'package:pokedex/helpers/customWidget.dart';
+import 'package:pokedex/models/pokemon_detail_genera_model.dart';
 import 'package:pokedex/models/pokemon_list_model.dart';
 import 'package:pokedex/screens/poke_detail/pokemon_about.dart';
 import 'package:pokedex/screens/poke_detail/pokemon_evolutions.dart';
 import 'package:pokedex/screens/poke_detail/pokemon_moves.dart';
 import 'package:pokedex/screens/poke_detail/pokemon_stats.dart';
+import 'package:pokedex/services/api_provider.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 class PokemonDetailScreen extends StatefulWidget {
@@ -18,6 +20,7 @@ class PokemonDetailScreen extends StatefulWidget {
 
 class _PokemonDetailScreenState extends State<PokemonDetailScreen>
     with TickerProviderStateMixin {
+  ApiProvider apiProvider = ApiProvider();
   AnimationController controller;
   double opacidad = 0;
   @override
@@ -219,6 +222,8 @@ class _PokemonDetailScreenState extends State<PokemonDetailScreen>
             width: 10,
           ),
           _pokemonTipoChip(widget.pokemon.type2),
+          SizedBox(width: 20),
+          _pokemonGenera(widget.pokemon.name.toLowerCase()),
         ],
       ),
     ]);
@@ -247,5 +252,32 @@ class _PokemonDetailScreenState extends State<PokemonDetailScreen>
             ],
           ));
     }
+  }
+
+  Widget _pokemonGenera(String nombrePoke) {
+    return Container(
+      child: FutureBuilder<PokeDetailGenera>(
+          future: apiProvider.obtenerTextGenera(nombrePoke),
+          builder:
+              (BuildContext context, AsyncSnapshot<PokeDetailGenera> snapshot) {
+            if (snapshot.hasData) {
+              return Column(children: [
+                Opacity(
+                  opacity: opacidad,
+                  child: Text(
+                    snapshot.data.genera[5].genus,
+                    style: TextStyle(
+                      fontSize: getFontSize(context, 16),
+                      color: Colors.white70,
+                      letterSpacing: 1,
+                    ),
+                  ),
+                )
+              ]);
+            } else {
+              return Text('');
+            }
+          }),
+    );
   }
 }
